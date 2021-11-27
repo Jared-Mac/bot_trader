@@ -10,6 +10,10 @@ size_t Stock::numberOfSnapshots() const {
 	return this->snapshots.size();
 }
 
+std::string Stock::getSymbol()
+{
+	return symbol;
+}
 StockSnapshot Stock::getSnapshot(size_t i) const {
 	std::stringstream ss;
 
@@ -21,6 +25,7 @@ StockSnapshot Stock::getSnapshot(size_t i) const {
 
 	throw std::invalid_argument(ss.str());
 }
+
 
 StockSnapshot Stock::getSnapshot(std::time_t date) const {
 	std::stringstream ss;
@@ -56,6 +61,8 @@ void Stock::clearSnapshots() {
 std::string Stock::getHistoricalCSV(const std::time_t start, const std::time_t end, const Interval interval) {
 	return downloadYahooCSV(this->symbol, start, end, interval);
 }
+
+
 
 /**
  * Populates the StockSnapshots vector of this Stock from the start of

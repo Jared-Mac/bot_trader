@@ -8,6 +8,7 @@
 #include "StockSnapshot.hpp"
 #include "Interval.h"
 
+
 class Stock {
 	private:
 		std::string symbol;
@@ -31,11 +32,14 @@ class Stock {
 									 const Interval interval);
 
 	public:
+		
 		Stock(std::string symbol);
 
 		~Stock();
 
 		size_t numberOfSnapshots() const;
+
+		std::string getSymbol();
 
 		StockSnapshot getSnapshot(size_t i) const;
 		StockSnapshot getSnapshot(std::time_t date) const;
@@ -51,6 +55,7 @@ class Stock {
 									std::time_t end,
 									const Interval interval);
 
+		
 		/**
 		* Populates the StockSnapshot vector of this Quote from the start of
 		* the period to the end of the period sampling at the given Interval.
