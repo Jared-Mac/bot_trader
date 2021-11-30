@@ -10,7 +10,7 @@ LIB = -lcurl -lboost_system -lboost_iostreams -lboost_filesystem
 # Link flags
 LDFLAGS = -L.
 # Target executable (output)
-PROG = bot
+PROG = main
 # .c or .cpp source files.
 SRC = *.cpp bot/*.cpp temporal/*.cpp stock/*.cpp
 # Object files for the target. Add more to this and next lines if there are more than one source files.
