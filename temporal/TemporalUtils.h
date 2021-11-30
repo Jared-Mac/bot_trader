@@ -1,9 +1,11 @@
-#ifndef TIME_UTILS_HPP
-#define TIME_UTILS_HPP
+#ifndef TEMPORAL_UTILS_H
+#define TEMPORAL_UTILS_H
 
 #include <iomanip>
 #include <string>
 #include <ctime>
+
+#include "Interval.h"
 
 /**
  * Returns the current timestamp as a time_t object.
@@ -19,6 +21,16 @@ std::time_t stringToTime(const std::string date);
  * Converts the given time_t object into a "yyyy-mm-dd" string.
  */
 std::string timeToString(const std::time_t date);
+
+/**
+ * Returns the time_t object representing the next in the given interval.
+ */
+std::time_t nextDate(const std::time_t date, Interval interval);
+
+/**
+ * Returns the time_t object representing the previous in the given interval.
+ */
+std::time_t previousDate(const std::time_t date, Interval interval);
 
 /**
  * Returns the time_t object representing the day after the given date.

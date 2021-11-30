@@ -1,7 +1,7 @@
 #ifndef BOT_H
 #define BOT_H
 
-#include "Stock.h"
+#include "../stock/Stock.h"
 #include "string.h"
 #include "Position.h"
 
@@ -16,6 +16,7 @@ class Bot {
         std::map<std::string,class Position> positions;
 
     public:
+		std::string name;
         Bot();
         ~Bot();
 
