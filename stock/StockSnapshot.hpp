@@ -1,22 +1,24 @@
 #ifndef STOCK_SNAPSHOT_HPP
 #define STOCK_SNAPSHOT_HPP
 
-#include <iomanip>
-#include <string>
 #include <ctime>
+#include <string>
+#include <iomanip>
 
-#include "time_utils.h"
+// Used by the toString to represent the date.
+#include "../temporal/TemporalUtils.h"
 
 class StockSnapshot {
 	private:
-		std::time_t date;
+		std::string symbol;
+		time_t date;
 		double open;
 		double high;
 		double low;
 		double close;
 
-	public:
-		StockSnapshot(std::time_t date, double open, double high, double low, double close)  {
+		StockSnapshot(std::string symbol, time_t date, double open, double high, double low, double close)  {
+			this->symbol = symbol;
 			this->date = date;
 			this->open = open;
 			this->high = high;
@@ -24,11 +26,10 @@ class StockSnapshot {
 			this->close = close;
 		}
 
-		StockSnapshot(std::string date, double open, double high, double low, double close) : StockSnapshot(stringToTime(date), open, high, low, close) {}
-		StockSnapshot(std::time_t date, double price) : StockSnapshot(date, price, price, price, price) {}
-		StockSnapshot(std::string date, double price) : StockSnapshot(stringToTime(date), price, price, price, price) {}
-
-		~StockSnapshot() {}
+	public:
+		inline std::string getSymbol() const {
+			return this->symbol;
+		}
 
 		inline std::time_t getDate() const {
 			return this->date;
@@ -56,11 +57,13 @@ class StockSnapshot {
 
 		std::string toString() const {
 			std::ostringstream oss;
+			oss << std::fixed << std::showpoint << std::setprecision(2);
+			oss << "Symbol: " << this->getSymbol() << " ";
 			oss << "Date: " << this->getDateString() << " ";
-			oss << "Open: " << this->getOpening() << " ";
-			oss << "High: " << this->getHigh() << " ";
-			oss << "Low: " << this->getLow() << " ";
-			oss << "Close: " << this->getClosing();
+			oss << "Open: $" << this->getOpening() << " ";
+			oss << "High: $" << this->getHigh() << " ";
+			oss << "Low: $" << this->getLow() << " ";
+			oss << "Close: $" << this->getClosing();
 
 			return oss.str();
 		}
@@ -68,6 +71,9 @@ class StockSnapshot {
 		friend std::ostream& operator<<(std::ostream& out, const StockSnapshot& snapshot) {
 			return out << snapshot.toString();
 		}
+
+		// Only YahooFinanceAPI can create StockSnapshots.
+		friend class YahooFinanceAPI;
 };
 
 #endif

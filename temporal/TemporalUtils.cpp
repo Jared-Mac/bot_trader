@@ -1,4 +1,4 @@
-#include "time_utils.h"
+#include "TemporalUtils.h"
 
 /**
  * Returns the current timestamp as a time_t object.
@@ -46,6 +46,34 @@ std::string timeToString(const std::time_t date) {
 	ss << std::setw(2) << ptm->tm_mday;
 
 	return ss.str();
+}
+
+/**
+ * Returns the time_t object representing the next in the given interval.
+ */
+std::time_t nextDate(const std::time_t date, Interval interval) {
+	switch (interval) {
+		case DAILY:
+			return nextDay(date);
+		case WEEKLY:
+			return nextWeek(date);
+		case MONTHLY:
+			return nextMonth(date);
+	}
+}
+
+/**
+ * Returns the time_t object representing the previous in the given interval.
+ */
+std::time_t previousDate(const std::time_t date, Interval interval) {
+	switch (interval) {
+		case DAILY:
+			return previousDay(date);
+		case WEEKLY:
+			return previousWeek(date);
+		case MONTHLY:
+			return previousMonth(date);
+	}
 }
 
 /**
