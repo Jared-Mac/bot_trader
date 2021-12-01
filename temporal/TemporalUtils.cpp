@@ -53,12 +53,12 @@ std::string timeToString(const std::time_t date) {
  */
 std::time_t nextDate(const std::time_t date, Interval interval) {
 	switch (interval) {
-		case DAILY:
-			return nextDay(date);
 		case WEEKLY:
 			return nextWeek(date);
 		case MONTHLY:
 			return nextMonth(date);
+		default: // DAILY
+			return previousDay(date);
 	}
 }
 
@@ -67,12 +67,12 @@ std::time_t nextDate(const std::time_t date, Interval interval) {
  */
 std::time_t previousDate(const std::time_t date, Interval interval) {
 	switch (interval) {
-		case DAILY:
-			return previousDay(date);
 		case WEEKLY:
 			return previousWeek(date);
 		case MONTHLY:
 			return previousMonth(date);
+		default: // DAILY
+			return previousDay(date);
 	}
 }
 
