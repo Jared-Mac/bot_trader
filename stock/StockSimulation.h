@@ -27,6 +27,8 @@ class StockSimulation {
 	public:
 		static StockSimulationBuilder builder();
 
+		~StockSimulation();
+
 		/**
 		 * Executes the stock simulation.
 		 */

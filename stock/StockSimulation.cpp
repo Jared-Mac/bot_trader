@@ -7,6 +7,12 @@ StockSimulation::StockSimulation(std::unordered_map<Stock*, std::vector<Bot*>> s
 	this->interval = interval;
 }
 
+StockSimulation::~StockSimulation() {
+	for (auto stock_pair : this->stocks) {
+		delete stock_pair.first;
+	}
+}
+
 StockSimulationBuilder StockSimulation::builder() {
 	return StockSimulationBuilder();
 }
