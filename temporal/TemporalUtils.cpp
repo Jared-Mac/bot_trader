@@ -58,7 +58,7 @@ std::time_t nextDate(const std::time_t date, Interval interval) {
 		case MONTHLY:
 			return nextMonth(date);
 		default: // DAILY
-			return previousDay(date);
+			return nextDay(date);
 	}
 }
 
