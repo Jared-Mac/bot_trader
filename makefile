@@ -12,7 +12,7 @@ LDFLAGS = -L.
 # Target executable (output)
 PROG = main
 # .c or .cpp source files.
-SRC = *.cpp bot/*.cpp temporal/*.cpp stock/*.cpp
+SRC = *.cpp $(wildcard **/*.cpp)
 # Object files for the target. Add more to this and next lines if there are more than one source files.
 OBJ = $(SRC:.cpp=.o)
 VER=c++11
@@ -26,4 +26,4 @@ $(PROG): $(OBJ)
 
 # cleanup
 clean:
-	/bin/rm -f *.o $(PROG)
+	/bin/rm -f *.o $(wildcard **/*.o) $(PROG)
