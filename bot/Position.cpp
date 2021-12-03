@@ -31,6 +31,11 @@ void Position::setAvgcost(double price)
 {
     this->avg_cost = price;
 }
+
+double Position::getCurrentPrice(void)
+{
+    return this->snapshots.back()->getLow();
+}
 std::ostream& operator<<(std::ostream& out, const Position& position)
 {
     
