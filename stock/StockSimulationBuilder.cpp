@@ -61,24 +61,32 @@ StockSimulation* StockSimulationBuilder::build() {
 		throw std::logic_error("StockSimulations need an interval!");
 	}
 
-	std::unordered_map<Stock*, std::vector<Bot*>> stocks;
+	std::unordered_map<Stock*, std::vector<Bot*>> stock_mapping;
+	std::unordered_map<Bot*, std::vector<Stock*>> bot_mapping;
 
 	// Create all the Stock objects with the known Bots subscribed to everything.
 	for (auto symbol : this->symbols) {
 		Stock* stock = new Stock(symbol);
-		stocks[stock].insert(stocks[stock].begin(), this->bots_subscribed_to_all.begin(), this->bots_subscribed_to_all.end());
+
+		for (auto bot : this->bots_subscribed_to_all) {
+			// Create bi-directional relationship.
+			stock_mapping[stock].push_back(bot);
+			bot_mapping[bot].push_back(stock);
+		}
 	}
 
 	// Add each limited Bot to the Stocks it subscribed to.
 	for (auto bot_pair : this->bots) {
 		for (auto symbol : bot_pair.second) {
-			for (auto stock_pair : stocks) {
+			for (auto stock_pair : stock_mapping) {
 				if (stock_pair.first->getSymbol() == symbol) {
-					stocks[stock_pair.first].push_back(bot_pair.first);
+					// Create bi-directional relationship.
+					stock_mapping[stock_pair.first].push_back(bot_pair.first);
+					bot_mapping[bot_pair.first].push_back(stock_pair.first);
 				}
 			}
 		}
 	}
 
-	return new StockSimulation(stocks, this->start, this->end, this->interval);
+	return new StockSimulation(stock_mapping, bot_mapping, this->start, this->end, this->interval);
 }
