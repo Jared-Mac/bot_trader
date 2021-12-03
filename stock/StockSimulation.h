@@ -17,12 +17,14 @@ class StockSimulationBuilder;
 
 class StockSimulation {
 	private:
-		std::unordered_map<Stock*, std::vector<Bot*>> stocks;
+		// Makeshift bi-map
+		std::unordered_map<Stock*, std::vector<Bot*>> stock_mapping;
+		std::unordered_map<Bot*, std::vector<Stock*>> bot_mapping;
 		std::time_t start;
 		std::time_t end;
 		Interval interval;
 
-		StockSimulation(std::unordered_map<Stock*, std::vector<Bot*>> stocks, std::time_t start, std::time_t end, Interval interval);
+		StockSimulation(std::unordered_map<Stock*, std::vector<Bot*>> stock_mapping, std::unordered_map<Bot*, std::vector<Stock*>> bot_mapping, std::time_t start, std::time_t end, Interval interval);
 
 	public:
 		static StockSimulationBuilder builder();
