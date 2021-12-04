@@ -14,17 +14,16 @@ void AbstractBot::deposit(double depositAmount)
 {
     this->accountBalance += depositAmount;
 }
-void AbstractBot::buyStock(const Stock *stock, float shares)
+void AbstractBot::buyStock(std::string stockSymbol, double spendingMoney)
 {
     
-      
-    string stockSymbol = stock->getSymbol();
-
     double price = this->positions[stockSymbol].getCurrentPrice();
 
-    
+    float shares = spendingMoney / price;
+
+    this->positions[stockSymbol].setAvgcost(price,shares);
     this->positions[stockSymbol].addShares(shares);
-    this->positions[stockSymbol].setAvgcost(price);
+
     this->accountBalance -= shares*price;
 
     cout << "[BUY] " << "Stock: " << stockSymbol << " Shares " << shares <<
@@ -47,22 +46,39 @@ void AbstractBot::sellStock(const Stock *stock, float shares)
 }
 
 
-void AbstractBot::notify(StockSnapshot* snapshot)
+void AbstractBot::notify(time_t currentDay,std::vector<StockSnapshot> snapshots)
 {
-    this->positions[snapshot->getSymbol()].snapshots.push_back(snapshot);
-}
-
-std::ostream& operator<<(std::ostream& out, const AbstractBot& AbstractBot) {
-    cout << "AbstractBot's account balance : " << AbstractBot.accountBalance << endl;
-    cout << "AbstractBot's positions" << endl;
-	for(auto it=AbstractBot.positions.cbegin(); it!= AbstractBot.positions.cend(); ++it)
+    std::cout << "Account Balance: " << this->accountBalance << std::endl;
+    for (auto snapshot: snapshots)
     {
-        cout << it->first << '\t' << (it->second) << '\n';
+        if(this->positions.find(snapshot.getSymbol()) == this->positions.end())
+        {
+            Position pos;
+            this->positions.insert({snapshot.getSymbol(), pos});
+            cout << "New Position added" << endl;
+        }
+        else
+        {
+            cout << "Old position found, size = " << positions[snapshot.getSymbol()].snapshots.size() << endl;
+
+        }
+        try{
+            this->positions[snapshot.getSymbol()].snapshots.push_back(snapshot);
+            cout << "Latest snapshot added: " << this->positions[snapshot.getSymbol()].snapshots.back() << endl;
+            cout << "New size = " << positions[snapshot.getSymbol()].snapshots.size() << endl;
+            
+
+        }
+        catch(exception e)
+        {
+            cout << e.what() << endl;
+        }
     }
-
-	return out;
+    for(auto pos: this->positions)
+    {
+        cout << pos.second << endl;
+    }
 }
-
 
 ConservativeBot::ConservativeBot(){
     
@@ -70,13 +86,31 @@ ConservativeBot::ConservativeBot(){
 ConservativeBot::~ConservativeBot(){
     
 }
+void ConservativeBot::trade()
+{
+    std::cout << "Conservatively Trading" << std::endl;
+    double spendingMoney = this->accountBalance / this->positions.size();
+
+    for(auto position: this->positions)
+    {
+        if( this->accountBalance > 0.009) 
+        this->buyStock(position.first, spendingMoney);
+
+        
+    }
+
+}
+
 AggressiveBot::AggressiveBot(){
     
 }
 AggressiveBot::~AggressiveBot(){
     
 }
-
+void AggressiveBot::trade()
+{
+    std::cout << "Aggressively Trading" << std::endl;
+}
 void Bot::setBotType(BotType type)
 {
     delete bot_;
@@ -93,11 +127,35 @@ void Bot::setBotType(BotType type)
     }
     
 }
-void Bot::notify(StockSnapshot* snapshot)
+
+void Bot::notify(time_t currentDay,std::vector<StockSnapshot> snapshots)
 {
-    this->bot_->notify(snapshot);
+    this->bot_->notify(currentDay,snapshots);
+    this->trade();
+    std::cout<< *bot_ << std::endl;
 }
 void Bot::trade(void)
 {
     this->bot_->trade();
+}
+
+std::ostream& operator<<(std::ostream& out, const AbstractBot& AbstractBot) {
+    cout << "Bot'account balance : " << AbstractBot.accountBalance << endl;
+    cout << "Bot's positions" << endl;
+    double value = 0;
+
+    for(auto pair : AbstractBot.positions)
+    {   
+        cout << pair.first << '\t' << pair.second << endl;
+        // cout << "Current value: " <<  pair.second.getCurrentPrice() << endl;
+        // value += pair.second.getShares() * pair.second.getCurrentPrice();
+    }
+    // cout << "Portfolio Value: " << value << endl;
+	// for(auto it=AbstractBot.positions.cbegin(); it!= AbstractBot.positions.cend(); ++it)
+    // {
+    //     cout << it->first << '\t' << (it->second) << endl;
+    //     v
+    // }
+
+	return out;
 }

@@ -5,9 +5,10 @@
 class Position
 {
 private:
-    double avg_cost;
-    float shares;
-    std::vector<StockSnapshot *> snapshots;
+    double avg_cost = 0;
+    float shares = 0;
+
+    std::vector<StockSnapshot> snapshots;
 public:
     Position(/* args */);
     Position(const Position &source);
@@ -19,7 +20,8 @@ public:
 
     void addShares(float shares);
     void subShares(float shares);
-    void setAvgcost(double price);
+    void setAvgcost(double price,float shares);
+
     float getShares()
     {
         return this->shares;

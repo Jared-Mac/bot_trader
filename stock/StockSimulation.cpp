@@ -37,7 +37,7 @@ void StockSimulation::run() {
 			// Might still happen for undetectable holidays.
 			continue;
 		}
-
+		std::cout << timeToString(current_day) << std::endl;
 		for (auto bot_pair : this->bot_mapping) {
 			std::vector<StockSnapshot> daily_snapshots;
 
@@ -48,14 +48,13 @@ void StockSimulation::run() {
 					// Do nothing, the date was probably just a holiday or weekend.
 				}
 			}
-
 			if (daily_snapshots.empty()) {
 				// If no stock data was found for this bot, don't notify.
 				// Move on to the next bot.
 				continue;
 			}
 
-			// bot_pair.first->notify(current_day, daily_snapshots);
+			bot_pair.first->notify(current_day, daily_snapshots);
         }
     }
 }

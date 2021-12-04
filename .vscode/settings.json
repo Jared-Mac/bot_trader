@@ -48,6 +48,10 @@
         "stdexcept": "cpp",
         "streambuf": "cpp",
         "typeinfo": "cpp",
-        "map": "cpp"
+        "map": "cpp",
+        "complex": "cpp",
+        "cstring": "cpp",
+        "unordered_set": "cpp",
+        "fstream": "cpp"
     }
 }

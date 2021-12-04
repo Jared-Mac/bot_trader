@@ -14,26 +14,21 @@ enum BotType
 };
 class AbstractBot {
     private:
-
-        double accountBalance;
-
-        void deposit(double depositAmount);
-
-        std::map<std::string,class Position> positions;
-
         virtual void trade(void) = 0;
-        // void trade(void){}
-        
+    protected:
+        double accountBalance;
+        std::map<std::string,class Position> positions;
+        void deposit(double depositAmount);
+        void buyStock(std::string stockSymbol,double spendingMoney);
+        void sellStock(const Stock *stock, float shares);
     public:
 		std::string name;
         AbstractBot();
         ~AbstractBot();
         
-        // Temporarily public for testing, should be private
-        void buyStock(const Stock *stock, float shares);
-        void sellStock(const Stock *stock, float shares);
+        void rankStocks();
 
-        void notify(StockSnapshot* snapshot);
+        void notify(time_t currentDay,std::vector<StockSnapshot> snapshots);
 
         friend std::ostream& operator<<(std::ostream& out, const AbstractBot& AbstractBot);
 
@@ -47,7 +42,7 @@ class ConservativeBot: public AbstractBot
         ConservativeBot();
         ~ConservativeBot();
     private:
-        void trade(void){}
+        void trade(void);
 };
 
 class AggressiveBot: public AbstractBot
@@ -56,7 +51,7 @@ class AggressiveBot: public AbstractBot
         AggressiveBot();
         ~AggressiveBot();
     private:
-        void trade(void){}
+        void trade(void);
 };
 class Bot
 {
@@ -66,7 +61,7 @@ class Bot
             bot_ = NULL;
         }
         void setBotType(BotType type);
-        void notify(StockSnapshot* snapshot);
+        void notify(time_t currentDay,std::vector<StockSnapshot> snapshots);
         void trade(void);
     private:
         AbstractBot * bot_;

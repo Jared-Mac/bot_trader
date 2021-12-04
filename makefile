@@ -6,7 +6,7 @@ CC = g++
 # Compilation flags: -g for debugging. Change to -O or -O2 for optimized code.
 CFLAGS = -o -Wall -std=c++17
 # Linked libraries
-LIB = -lcurl -lboost_system -lboost_iostreams -lboost_filesystem
+LIB = -lcurl 
 # Link flags
 LDFLAGS = -L.
 # Target executable (output)

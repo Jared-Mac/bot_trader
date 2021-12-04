@@ -27,18 +27,31 @@ void Position::subShares(float shares)
 {
     this->shares -= shares;
 }
-void Position::setAvgcost(double price)
+void Position::setAvgcost(double price,float shares)
 {
-    this->avg_cost = price;
+    if(this->getShares() < 0.009)
+    {
+        this->avg_cost =   price; 
+        return;     
+    }
+    float prevShares = this->getShares();
+    double prevAvg_cost = this->getAvgCost();
+    float total_shares = shares + prevShares;
+    double total_cost = prevAvg_cost + price;
+    this->avg_cost = total_cost/total_shares;
 }
 
 double Position::getCurrentPrice(void)
 {
-    return this->snapshots.back()->getLow();
+    if(snapshots.size() > 0)
+        return this->snapshots.front().getLow();
+    else return 0;
 }
 std::ostream& operator<<(std::ostream& out, const Position& position)
 {
     
-    std::cout << "Shares: " << position.shares << " at average cost " << position.avg_cost << std::endl;
+    std::cout << "Shares: " << position.shares << " at average cost " << position.avg_cost;
+    std::cout << "\nSize of historical snapshots: " << position.snapshots.size() << std::endl;    
+
     return out;
 }
