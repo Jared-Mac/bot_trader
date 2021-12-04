@@ -1,7 +1,11 @@
+#ifndef Position_H
+#define Position_H
+
 #include <iostream>
 #include "../stock/StockSnapshot.hpp"
 #include <vector>
 #include <map>
+
 class Position
 {
 private:
@@ -36,3 +40,4 @@ public:
     friend class AbstractBot;
 };
 
+#endif

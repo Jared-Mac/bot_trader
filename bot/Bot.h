@@ -1,11 +1,13 @@
 #ifndef AbstractBot_H
 #define AbstractBot_H
 
+#include <map>
+
 #include "../stock/Stock.h"
 #include "string.h"
 #include "Position.h"
+#include "Trade.h"
 
-#include <map>
 
 enum BotType
 {
@@ -14,13 +16,16 @@ enum BotType
 };
 class AbstractBot {
     private:
-        virtual void trade(void) = 0;
+        virtual void trade(time_t currentDay) = 0;
     protected:
         double accountBalance;
+
         std::map<std::string,class Position> positions;
+        std::unordered_map<time_t,std::vector<Trade>> trades;
+
         void deposit(double depositAmount);
-        void buyStock(std::string stockSymbol,double spendingMoney);
-        void sellStock(const Stock *stock, float shares);
+        Trade buyStock(std::string stockSymbol,double spendingMoney);
+        Trade sellStock(std::string stockSymbol, float shares);
     public:
 		std::string name;
         AbstractBot();
@@ -42,7 +47,7 @@ class ConservativeBot: public AbstractBot
         ConservativeBot();
         ~ConservativeBot();
     private:
-        void trade(void);
+        void trade(time_t currentDay);
 };
 
 class AggressiveBot: public AbstractBot
@@ -51,7 +56,7 @@ class AggressiveBot: public AbstractBot
         AggressiveBot();
         ~AggressiveBot();
     private:
-        void trade(void);
+        void trade(time_t currentDay);
 };
 class Bot
 {
@@ -62,7 +67,7 @@ class Bot
         }
         void setBotType(BotType type);
         void notify(time_t currentDay,std::vector<StockSnapshot> snapshots);
-        void trade(void);
+        void trade(time_t currentDay);
     private:
         AbstractBot * bot_;
 };

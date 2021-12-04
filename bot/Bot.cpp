@@ -14,7 +14,7 @@ void AbstractBot::deposit(double depositAmount)
 {
     this->accountBalance += depositAmount;
 }
-void AbstractBot::buyStock(std::string stockSymbol, double spendingMoney)
+Trade AbstractBot::buyStock(std::string stockSymbol, double spendingMoney)
 {
     
     double price = this->positions[stockSymbol].getCurrentPrice();
@@ -25,24 +25,32 @@ void AbstractBot::buyStock(std::string stockSymbol, double spendingMoney)
     this->positions[stockSymbol].addShares(shares);
 
     this->accountBalance -= shares*price;
+    if (this->accountBalance < 0.009) this->accountBalance = 0;
+    
 
-    cout << "[BUY] " << "Stock: " << stockSymbol << " Shares " << shares <<
-        " Price per share: " << price << endl;
+    // cout << "[BUY] " << "Stock: " << stockSymbol << " Shares " << shares <<
+    //     " Price per share: " << price << endl;
+
+    return Trade(BUY, shares, price, stockSymbol);
 
 }
 
 
-void AbstractBot::sellStock(const Stock *stock, float shares)
+Trade AbstractBot::sellStock(std::string stockSymbol, float shares)
 {
-    string stockSymbol = stock->getSymbol();
+
+    // If requesting to sell more shares than bot owns, sell all shares 
+    if(shares > this->positions[stockSymbol].getShares())
+        shares = this->positions[stockSymbol].getShares();
 
     double price = this->positions[stockSymbol].getCurrentPrice();
-
     this->positions[stockSymbol].subShares(shares);
     this->accountBalance += shares*price;
 
-    cout << "[SELL] " << "Stock: " << stockSymbol << " Shares " << shares <<
-        " Price per share: " << price << endl;
+    // cout << "[SELL] " << "Stock: " << stockSymbol << " Shares " << shares <<
+    //     " Price per share: " << price << endl;
+
+    return Trade(SELL, shares, price, stockSymbol);
 }
 
 
@@ -58,16 +66,11 @@ void AbstractBot::notify(time_t currentDay,std::vector<StockSnapshot> snapshots)
             cout << "New Position added" << endl;
         }
         else
-        {
             cout << "Old position found, size = " << positions[snapshot.getSymbol()].snapshots.size() << endl;
-
-        }
         try{
             this->positions[snapshot.getSymbol()].snapshots.push_back(snapshot);
             cout << "Latest snapshot added: " << this->positions[snapshot.getSymbol()].snapshots.back() << endl;
             cout << "New size = " << positions[snapshot.getSymbol()].snapshots.size() << endl;
-            
-
         }
         catch(exception e)
         {
@@ -86,7 +89,7 @@ ConservativeBot::ConservativeBot(){
 ConservativeBot::~ConservativeBot(){
     
 }
-void ConservativeBot::trade()
+void ConservativeBot::trade(time_t currentDay)
 {
     std::cout << "Conservatively Trading" << std::endl;
     double spendingMoney = this->accountBalance / this->positions.size();
@@ -94,11 +97,13 @@ void ConservativeBot::trade()
     for(auto position: this->positions)
     {
         if( this->accountBalance > 0.009) 
-        this->buyStock(position.first, spendingMoney);
+        this->trades[currentDay].push_back((this->buyStock(position.first, spendingMoney)));
 
-        
     }
-
+    for(auto trade: this->trades[currentDay])
+    {
+        cout << trade << endl;
+    }
 }
 
 AggressiveBot::AggressiveBot(){
@@ -107,7 +112,8 @@ AggressiveBot::AggressiveBot(){
 AggressiveBot::~AggressiveBot(){
     
 }
-void AggressiveBot::trade()
+
+void AggressiveBot::trade(time_t currentDay)
 {
     std::cout << "Aggressively Trading" << std::endl;
 }
@@ -131,12 +137,12 @@ void Bot::setBotType(BotType type)
 void Bot::notify(time_t currentDay,std::vector<StockSnapshot> snapshots)
 {
     this->bot_->notify(currentDay,snapshots);
-    this->trade();
+    this->trade(currentDay);
     std::cout<< *bot_ << std::endl;
 }
-void Bot::trade(void)
+void Bot::trade(time_t currentDay)
 {
-    this->bot_->trade();
+    this->bot_->trade(currentDay);
 }
 
 std::ostream& operator<<(std::ostream& out, const AbstractBot& AbstractBot) {
