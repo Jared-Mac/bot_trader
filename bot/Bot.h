@@ -1,11 +1,13 @@
 #ifndef AbstractBot_H
 #define AbstractBot_H
 
+#include <map>
+
 #include "../stock/Stock.h"
 #include "string.h"
 #include "Position.h"
+#include "Trade.h"
 
-#include <map>
 
 enum BotType
 {
@@ -14,26 +16,28 @@ enum BotType
 };
 class AbstractBot {
     private:
+        virtual void trade(time_t currentDay) = 0;
 
+    protected:
         double accountBalance;
+        int daysToDeposit;
+        double depositAmount;
+        std::unordered_map<std::string,Position *> positions;
+        std::unordered_map<time_t,std::vector<Trade *>> trades;
 
         void deposit(double depositAmount);
-
-        std::map<std::string,class Position> positions;
-
-        virtual void trade(void) = 0;
-        // void trade(void){}
-        
+        Trade * buyStock(std::string stockSymbol,double spendingMoney);
+        Trade * sellStock(std::string stockSymbol, float shares);
     public:
 		std::string name;
         AbstractBot();
         ~AbstractBot();
         
-        // Temporarily public for testing, should be private
-        void buyStock(const Stock *stock, float shares);
-        void sellStock(const Stock *stock, float shares);
+        void checkForDeposit();
 
-        void notify(StockSnapshot* snapshot);
+        std::map<double,Position *>* rankStocks(time_t currentDay);
+
+        void notify(time_t currentDay,std::vector<StockSnapshot> snapshots);
 
         friend std::ostream& operator<<(std::ostream& out, const AbstractBot& AbstractBot);
 
@@ -47,7 +51,7 @@ class ConservativeBot: public AbstractBot
         ConservativeBot();
         ~ConservativeBot();
     private:
-        void trade(void){}
+        void trade(time_t currentDay);
 };
 
 class AggressiveBot: public AbstractBot
@@ -56,7 +60,7 @@ class AggressiveBot: public AbstractBot
         AggressiveBot();
         ~AggressiveBot();
     private:
-        void trade(void){}
+        void trade(time_t currentDay);
 };
 class Bot
 {
@@ -65,9 +69,10 @@ class Bot
         {
             bot_ = NULL;
         }
+        ~Bot();
         void setBotType(BotType type);
-        void notify(StockSnapshot* snapshot);
-        void trade(void);
+        void notify(time_t currentDay,std::vector<StockSnapshot> snapshots);
+        void trade(time_t currentDay);
     private:
         AbstractBot * bot_;
 };

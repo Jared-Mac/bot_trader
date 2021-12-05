@@ -80,7 +80,7 @@ std::time_t previousDate(const std::time_t date, Interval interval) {
  * Returns the time_t object representing the day after the given date.
  */
 std::time_t nextDay(const std::time_t date) {
-	struct tm* ptm = gmtime(&date);
+	struct tm* ptm = localtime(&date);
 	ptm->tm_mday++;
 	return mktime(ptm);
 }
@@ -89,7 +89,7 @@ std::time_t nextDay(const std::time_t date) {
  * Returns the time_t object representing the day before the given date.
  */
 std::time_t previousDay(const std::time_t date) {
-	struct tm* ptm = gmtime(&date);
+	struct tm* ptm = localtime(&date);
 	ptm->tm_mday--;
 	return mktime(ptm);
 }
