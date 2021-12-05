@@ -37,7 +37,7 @@ std::string timeToString(const std::time_t date) {
 	std::stringstream ss;
 	ss << std::setfill('0');
 
-	struct std::tm* ptm = std::gmtime(&date);
+	struct std::tm* ptm = std::localtime(&date);
 
 	ss << ptm->tm_year + 1900;
 	ss << "-";
@@ -98,7 +98,7 @@ std::time_t previousDay(const std::time_t date) {
  * Returns the time_t object representing the Monday after the given date.
  */
 std::time_t nextWeek(const std::time_t date) {
-	struct tm* ptm = gmtime(&date);
+	struct tm* ptm = localtime(&date);
 	// [# + ((4 - #) * 2)]
 	int days = ptm->tm_wday + (4 - ptm->tm_wday) * 2;
 	ptm->tm_mday += (days <= 7) ? days : days % 7;
@@ -109,7 +109,7 @@ std::time_t nextWeek(const std::time_t date) {
  * Returns the time_t object representing the Monday before the given date.
  */
 std::time_t previousWeek(const std::time_t date) {
-	struct tm* ptm = gmtime(&date);
+	struct tm* ptm = localtime(&date);
 	// [# + ((4 - #) * 2)]
 	int days = (ptm->tm_wday <= 1) ?  6 : -1;
 	ptm->tm_mday -= ptm->tm_wday + days;
@@ -120,7 +120,7 @@ std::time_t previousWeek(const std::time_t date) {
  * Returns the time_t object representing the first of the month after the given date.
  */
 std::time_t nextMonth(const std::time_t date) {
-	struct tm* ptm = gmtime(&date);
+	struct tm* ptm = localtime(&date);
 	ptm->tm_mon++;
 	ptm->tm_mday = 1;
 	return mktime(ptm);
@@ -130,7 +130,7 @@ std::time_t nextMonth(const std::time_t date) {
  * Returns the time_t object representing the first of the month before the given date.
  */
 std::time_t previousMonth(const std::time_t date) {
-	struct tm* ptm = gmtime(&date);
+	struct tm* ptm = localtime(&date);
 	if (ptm->tm_mday <= 1) {
 		ptm->tm_mon--;
 	}
@@ -143,7 +143,7 @@ std::time_t previousMonth(const std::time_t date) {
  * Returns true if the time_t object represents a day between Monday and Friday inclusively.
  */
 bool isWeekday(const std::time_t date) {
-	struct tm* ptm = gmtime(&date);
+	struct tm* ptm = localtime(&date);
 	return 0 < ptm->tm_wday && ptm->tm_wday < 6;
 }
 
