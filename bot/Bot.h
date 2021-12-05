@@ -17,21 +17,25 @@ enum BotType
 class AbstractBot {
     private:
         virtual void trade(time_t currentDay) = 0;
+
     protected:
         double accountBalance;
-
-        std::map<std::string,class Position> positions;
-        std::unordered_map<time_t,std::vector<Trade>> trades;
+        int daysToDeposit;
+        double depositAmount;
+        std::unordered_map<std::string,Position *> positions;
+        std::unordered_map<time_t,std::vector<Trade *>> trades;
 
         void deposit(double depositAmount);
-        Trade buyStock(std::string stockSymbol,double spendingMoney);
-        Trade sellStock(std::string stockSymbol, float shares);
+        Trade * buyStock(std::string stockSymbol,double spendingMoney);
+        Trade * sellStock(std::string stockSymbol, float shares);
     public:
 		std::string name;
         AbstractBot();
         ~AbstractBot();
         
-        void rankStocks();
+        void checkForDeposit();
+
+        std::map<double,Position *>* rankStocks(time_t currentDay);
 
         void notify(time_t currentDay,std::vector<StockSnapshot> snapshots);
 
@@ -65,6 +69,7 @@ class Bot
         {
             bot_ = NULL;
         }
+        ~Bot();
         void setBotType(BotType type);
         void notify(time_t currentDay,std::vector<StockSnapshot> snapshots);
         void trade(time_t currentDay);

@@ -11,6 +11,7 @@ Position::Position(/* args */)
 
 Position::~Position()
 {
+    
 }
 
 Position::Position(const Position &source)
@@ -44,14 +45,13 @@ void Position::setAvgcost(double price,float shares)
 double Position::getCurrentPrice(void)
 {
     if(snapshots.size() > 0)
-        return this->snapshots.front().getLow();
+        return this->snapshots.back().getLow();
     else return 0;
 }
 std::ostream& operator<<(std::ostream& out, const Position& position)
 {
     
     std::cout << "Shares: " << position.shares << " at average cost " << position.avg_cost;
-    std::cout << "\nSize of historical snapshots: " << position.snapshots.size() << std::endl;    
 
     return out;
 }

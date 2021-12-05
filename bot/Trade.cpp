@@ -18,7 +18,7 @@ std::ostream& operator<<(std::ostream& out, const Trade& trade)
         std::cout << "[BUY]";
     else
         std::cout << "[SELL]";
-    std::cout << " " << trade.shares << " shares of " << trade.stockSymbol << " at price " << trade.sharePrice << std::endl;
+    std::cout << " " << trade.shares << " shares of " << trade.stockSymbol << " at price " << trade.sharePrice;
     
     return out;
 }

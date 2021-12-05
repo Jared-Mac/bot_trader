@@ -38,6 +38,7 @@ public:
     friend std::ostream& operator<<(std::ostream& out,  const Position& position);
 
     friend class AbstractBot;
+    friend class AggressiveBot;
 };
 
 #endif

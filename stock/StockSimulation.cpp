@@ -31,13 +31,14 @@ void StockSimulation::run() {
 
     while (itr.hasNext()) {
         time_t current_day = itr.next();
-
+		std::cout << timeToString(current_day) << std::endl;
 		if (isWeekend(current_day)) {
 			// Try to avoid unnecessary looping when no Stock data is available.
 			// Might still happen for undetectable holidays.
 			continue;
 		}
-		std::cout << timeToString(current_day) << std::endl;
+
+
 		for (auto bot_pair : this->bot_mapping) {
 			std::vector<StockSnapshot> daily_snapshots;
 
