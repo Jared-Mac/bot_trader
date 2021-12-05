@@ -6,7 +6,7 @@ using namespace std;
 
 AbstractBot::AbstractBot(){
     this->accountBalance = 10000;
-    int daysToDeposit = 0;
+    int daysToDeposit = 5;
     double depositAmount = 100;
 }
 
@@ -16,7 +16,12 @@ AbstractBot::~AbstractBot(){
         delete pair.second;
     }
 }
-
+AbstractBot::AbstractBot(double startingBalance, int daysToDeposit, double depositAmount)
+{
+    this->accountBalance = startingBalance;
+    this->daysToDeposit = daysToDeposit;
+    this->depositAmount = depositAmount;
+}
 void AbstractBot::deposit(double depositAmount)
 {
     this->accountBalance += this->depositAmount;
@@ -113,6 +118,9 @@ std::map<double,Position *>* AbstractBot::rankStocks(time_t currentDay)
 ConservativeBot::ConservativeBot(){
     
 }
+
+ConservativeBot::ConservativeBot(double startingBalance, int daysToDeposit, double depositAmount): AbstractBot(startingBalance, daysToDeposit, depositAmount)
+{}
 ConservativeBot::~ConservativeBot(){
     
 }
@@ -139,6 +147,13 @@ AggressiveBot::AggressiveBot(){
 AggressiveBot::~AggressiveBot(){
     
 }
+AggressiveBot::AggressiveBot(double startingBalance, int daysToDeposit, double depositAmount): AbstractBot(startingBalance, daysToDeposit, depositAmount)
+{}
+
+PassiveBot::PassiveBot(){}
+PassiveBot::PassiveBot(double startingBalance, int daysToDeposit, double depositAmount) : AbstractBot(startingBalance, daysToDeposit, depositAmount)
+{}
+PassiveBot::~PassiveBot(){}
 
 Bot::~Bot()
 {
@@ -169,6 +184,12 @@ void AggressiveBot::trade(time_t currentDay)
     }
 
 }
+
+void PassiveBot::trade(time_t currentDay)
+{
+    std::cout << "Passive bot does not trade " << std::endl;
+}
+
 void Bot::setBotType(BotType type)
 {
     delete bot_;
@@ -180,8 +201,28 @@ void Bot::setBotType(BotType type)
         case AGGRESSIVE:
             bot_ = (AbstractBot *) new AggressiveBot();
             break;
+        case PASSIVE:
+            bot_ = (AbstractBot *) new PassiveBot();
         default:
             bot_ = (AbstractBot *) new ConservativeBot();
+    }
+    
+}
+void Bot::setBotType(BotType type,double startingBalance, int daysToDeposit, double depositAmount)
+{
+    delete bot_;
+    switch(type)
+    {
+        case CONSERVATIVE:
+            bot_ = (AbstractBot *) new ConservativeBot(startingBalance, daysToDeposit, depositAmount);
+            break;
+        case AGGRESSIVE:
+            bot_ = (AbstractBot *) new AggressiveBot(startingBalance, daysToDeposit, depositAmount);
+            break;
+        case PASSIVE:
+            bot_ = (AbstractBot *) new PassiveBot(startingBalance, daysToDeposit, depositAmount);
+        default:
+            bot_ = (AbstractBot *) new ConservativeBot(startingBalance, daysToDeposit, depositAmount);
     }
     
 }
