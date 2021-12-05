@@ -27,7 +27,7 @@ std::time_t stringToTime(const std::string date) {
 	time.tm_mon  = std::stoi(month) - 1;
 	time.tm_mday = std::stoi(day);
 
-	return timegm(&time);
+	return mktime(&time);
 }
 
 /**

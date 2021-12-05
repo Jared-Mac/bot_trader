@@ -22,6 +22,7 @@ class AbstractBot {
     protected:
         double accountBalance;
         int daysToDeposit;
+        int depositPeriod;
         double depositAmount;
         std::unordered_map<std::string,Position *> positions;
         std::unordered_map<time_t,std::vector<Trade *>> trades;
@@ -32,7 +33,7 @@ class AbstractBot {
     public:
 		std::string name;
         AbstractBot();
-        AbstractBot(double startingBalance, int daysToDeposit, double depositAmount);
+        AbstractBot(double startingBalance, int depositPeriod, double depositAmount);
         ~AbstractBot();
         
         void checkForDeposit();
@@ -51,7 +52,7 @@ class ConservativeBot: public AbstractBot
 {
     public:
         ConservativeBot();
-        ConservativeBot(double startingBalance, int daysToDeposit, double depositAmount);
+        ConservativeBot(double startingBalance, int depositPeriod, double depositAmount);
         ~ConservativeBot();
     private:
         void trade(time_t currentDay);
@@ -61,7 +62,7 @@ class AggressiveBot: public AbstractBot
 {
     public:
         AggressiveBot();
-        AggressiveBot(double startingBalance, int daysToDeposit, double depositAmount);
+        AggressiveBot(double startingBalance, int depositPeriod, double depositAmount);
         ~AggressiveBot();
     private:
         void trade(time_t currentDay);
@@ -70,7 +71,7 @@ class PassiveBot: public AbstractBot
 {
     public:
         PassiveBot();
-        PassiveBot(double startingBalance, int daysToDeposit, double depositAmount);
+        PassiveBot(double startingBalance, int depositPeriod, double depositAmount);
         ~PassiveBot();
     private:
         void trade(time_t currentDay);
@@ -85,7 +86,7 @@ class Bot
         Bot(double startingBalance, int daysToDeposit, double depositAmount);
         ~Bot();
         void setBotType(BotType type);
-        void setBotType(BotType type, double startingBalance, int daysToDeposit, double depositAmount);
+        void setBotType(BotType type, double startingBalance, int depo, double depositAmount);
         void notify(time_t currentDay,std::vector<StockSnapshot> snapshots);
         void trade(time_t currentDay);
     private:
