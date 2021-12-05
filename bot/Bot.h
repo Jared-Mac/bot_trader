@@ -12,7 +12,8 @@
 enum BotType
 {
     CONSERVATIVE,
-    AGGRESSIVE
+    AGGRESSIVE,
+    PASSIVE
 };
 class AbstractBot {
     private:
@@ -31,6 +32,7 @@ class AbstractBot {
     public:
 		std::string name;
         AbstractBot();
+        AbstractBot(double startingBalance, int daysToDeposit, double depositAmount);
         ~AbstractBot();
         
         void checkForDeposit();
@@ -49,6 +51,7 @@ class ConservativeBot: public AbstractBot
 {
     public:
         ConservativeBot();
+        ConservativeBot(double startingBalance, int daysToDeposit, double depositAmount);
         ~ConservativeBot();
     private:
         void trade(time_t currentDay);
@@ -58,7 +61,17 @@ class AggressiveBot: public AbstractBot
 {
     public:
         AggressiveBot();
+        AggressiveBot(double startingBalance, int daysToDeposit, double depositAmount);
         ~AggressiveBot();
+    private:
+        void trade(time_t currentDay);
+};
+class PassiveBot: public AbstractBot
+{
+    public:
+        PassiveBot();
+        PassiveBot(double startingBalance, int daysToDeposit, double depositAmount);
+        ~PassiveBot();
     private:
         void trade(time_t currentDay);
 };
@@ -69,8 +82,10 @@ class Bot
         {
             bot_ = NULL;
         }
+        Bot(double startingBalance, int daysToDeposit, double depositAmount);
         ~Bot();
         void setBotType(BotType type);
+        void setBotType(BotType type, double startingBalance, int daysToDeposit, double depositAmount);
         void notify(time_t currentDay,std::vector<StockSnapshot> snapshots);
         void trade(time_t currentDay);
     private:
