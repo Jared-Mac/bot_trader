@@ -48,6 +48,7 @@ void StockSimulation::run() {
 					daily_snapshots.push_back(stock->getSnapshot(current_day));
 				} catch (std::out_of_range e) {
 					// Do nothing, the date was probably just a holiday or weekend.
+					// std::cout << e.what() << std::endl;
 				}
 			}
 			if (daily_snapshots.empty()) {

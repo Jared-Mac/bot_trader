@@ -23,6 +23,7 @@ class AbstractBot {
     protected:
         double accountBalance;
         int daysToDeposit;
+        int depositPeriod;
         double depositAmount;
         // std::unordered_map<std::string,Position *> positions;
         // std::unordered_map<time_t,std::vector<Trade *>> trades;
@@ -30,6 +31,8 @@ class AbstractBot {
         void deposit(double depositAmount);
         Trade * buyStock(std::string stockSymbol,double spendingMoney);
         Trade * sellStock(std::string stockSymbol, float shares);
+
+
     public:
         //should not be public
         std::unordered_map<std::string,Position *> positions;
@@ -46,7 +49,6 @@ class AbstractBot {
         double getPortfolioValue();
 
         std::map<double,Position *>* rankStocks(time_t currentDay);
-
 
         void notify(time_t currentDay,std::vector<StockSnapshot> snapshots);
 
@@ -94,7 +96,7 @@ class Bot
         Bot(double startingBalance, int daysToDeposit, double depositAmount);
         ~Bot();
         void setBotType(BotType type);
-        void setBotType(BotType type, double startingBalance, int daysToDeposit, double depositAmount);
+        void setBotType(BotType type, double startingBalance, int depo, double depositAmount);
         void notify(time_t currentDay,std::vector<StockSnapshot> snapshots);
         void trade(time_t currentDay);
         std::vector <double> portfolioReport();

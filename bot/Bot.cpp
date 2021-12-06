@@ -25,13 +25,23 @@ AbstractBot::AbstractBot(std::string name,double startingBalance, int daysToDepo
  }
 void AbstractBot::deposit(double depositAmount)
 {
-    this->accountBalance += this->depositAmount;
+    std::cout<< "[DEPOSIT] " << depositAmount << std::endl;
+    this->accountBalance += depositAmount;
 }
 void AbstractBot::checkForDeposit(){
     if (this->daysToDeposit == 0)
+    {
         deposit(this->depositAmount);
+        this->daysToDeposit = depositPeriod;
+    }
     else
         this->daysToDeposit--;
+}
+
+
+std::string AbstractBot::getName()
+{
+    return this->name;
 }
 Trade * AbstractBot::buyStock(std::string stockSymbol, double spendingMoney)
 {
@@ -50,10 +60,6 @@ Trade * AbstractBot::buyStock(std::string stockSymbol, double spendingMoney)
     return new Trade(BUY, shares, price, stockSymbol);
 
 }
-std::string AbstractBot::getName()
- {
-     return this->name;
- }
 
 Trade * AbstractBot::sellStock(std::string stockSymbol, float shares)
 {
@@ -206,6 +212,7 @@ void Bot::setBotType(BotType type)
             break;
         case PASSIVE:
             bot_ = (AbstractBot *) new PassiveBot();
+            break;
         default:
             bot_ = (AbstractBot *) new ConservativeBot();
     }
