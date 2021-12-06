@@ -37,7 +37,7 @@ int main() {
 
 	simulation->run();
 
-	displayStats(stringToTime("2021-11-01"),stringToTime("2021-11-30"),bot1->getBot());
+	// displayStats(stringToTime("2021-11-01"),stringToTime("2021-11-30"),bot1->getBot());
 
 	delete simulation;
 	delete bot1;

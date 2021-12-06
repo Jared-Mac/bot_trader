@@ -39,7 +39,7 @@ class AbstractBot {
         void checkForDeposit();
 
         std::map<double,Position *>* rankStocks(time_t currentDay);
-
+        double getPortfolioValue();
 
         void notify(time_t currentDay,std::vector<StockSnapshot> snapshots);
 
@@ -90,10 +90,7 @@ class Bot
         void setBotType(BotType type, double startingBalance, int daysToDeposit, double depositAmount);
         void notify(time_t currentDay,std::vector<StockSnapshot> snapshots);
         void trade(time_t currentDay);
-        AbstractBot * getBot()
-        {
-            return this->bot_;
-        }
+        AbstractBot * getBot(){return this->bot_;}
     private:
         AbstractBot * bot_;
 };

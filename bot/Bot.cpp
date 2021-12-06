@@ -32,6 +32,15 @@ void AbstractBot::checkForDeposit(){
     else
         this->daysToDeposit--;
 }
+double AbstractBot::getPortfolioValue()
+{
+    double value = this->accountBalance;
+    for(auto pair : this->positions)
+    {
+        value += pair.second->getShares() * pair.second->getCurrentPrice();
+    }
+    return value;
+}
 Trade * AbstractBot::buyStock(std::string stockSymbol, double spendingMoney)
 {
 
