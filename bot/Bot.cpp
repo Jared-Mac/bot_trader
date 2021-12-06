@@ -16,20 +16,26 @@ AbstractBot::~AbstractBot(){
         delete pair.second;
     }
 }
+
 AbstractBot::AbstractBot(std::string name,double startingBalance, int daysToDeposit, double depositAmount)
 {
     this->accountBalance = startingBalance;
-    this->daysToDeposit = daysToDeposit;
+    this->depositPeriod = depositPeriod;
+    this->daysToDeposit = depositPeriod;
     this->depositAmount = depositAmount;
     this->name = name;
 }
 void AbstractBot::deposit(double depositAmount)
 {
-    this->accountBalance += this->depositAmount;
+    std::cout<< "[DEPOSIT] " << depositAmount << std::endl;
+    this->accountBalance += depositAmount;
 }
 void AbstractBot::checkForDeposit(){
     if (this->daysToDeposit == 0)
+    {    
         deposit(this->depositAmount);
+        this->daysToDeposit == depositPeriod;
+    }
     else
         this->daysToDeposit--;
 }
@@ -218,6 +224,7 @@ void Bot::setBotType(BotType type)
             break;
         case PASSIVE:
             bot_ = (AbstractBot *) new PassiveBot();
+            break;
         default:
             bot_ = (AbstractBot *) new ConservativeBot();
     }
@@ -236,6 +243,7 @@ void Bot::setBotType(BotType type,double startingBalance, int daysToDeposit, dou
             break;
         case PASSIVE:
             bot_ = (AbstractBot *) new PassiveBot("Passive Bot",startingBalance, daysToDeposit, depositAmount);
+            break;
         default:
             bot_ = (AbstractBot *) new ConservativeBot("Conservative Bot",startingBalance, daysToDeposit, depositAmount);
     }

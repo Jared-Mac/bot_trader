@@ -22,6 +22,7 @@ class AbstractBot {
     protected:
         double accountBalance;
         int daysToDeposit;
+        int depositPeriod;
         double depositAmount;
         std::unordered_map<std::string,Position *> positions;
         std::unordered_map<time_t,std::vector<Trade *>> trades;
@@ -35,6 +36,7 @@ class AbstractBot {
     public:
 		
         AbstractBot();
+
         AbstractBot(std::string name,double startingBalance, int daysToDeposit, double depositAmount);
         ~AbstractBot();
         std::unordered_map<time_t,std::vector<Trade *>>  getTrades();
@@ -57,8 +59,8 @@ class ConservativeBot: public AbstractBot
 {
     public:
         ConservativeBot();
+
         ConservativeBot(std::string name,double startingBalance, int daysToDeposit, double depositAmount);
-        ~ConservativeBot();
 
     private:
         void trade(time_t currentDay);
@@ -68,6 +70,7 @@ class AggressiveBot: public AbstractBot
 {
     public:
         AggressiveBot();
+
         AggressiveBot(std::string name,double startingBalance, int daysToDeposit, double depositAmount);
         ~AggressiveBot();
     private:
@@ -78,6 +81,7 @@ class PassiveBot: public AbstractBot
     public:
         PassiveBot();
         PassiveBot(std::string name,double startingBalance, int daysToDeposit, double depositAmount);
+
         ~PassiveBot();
     private:
         void trade(time_t currentDay);
@@ -92,7 +96,7 @@ class Bot
         Bot(double startingBalance, int daysToDeposit, double depositAmount);
         ~Bot();
         void setBotType(BotType type);
-        void setBotType(BotType type, double startingBalance, int daysToDeposit, double depositAmount);
+        void setBotType(BotType type, double startingBalance, int depo, double depositAmount);
         void notify(time_t currentDay,std::vector<StockSnapshot> snapshots);
         void trade(time_t currentDay);
         AbstractBot * getBot(){return this->bot_;}

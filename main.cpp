@@ -18,7 +18,7 @@ int main() {
 
 
 	StockSimulation* simulation = StockSimulation::builder()
-	                                .withStartDate("2021-11-01")
+	                                .withStartDate("2021-01-01")
 	                                .withEndDate("2021-11-30")
 	                                .withInterval(DAILY)
 	                                // Add Apple to the simulation.
