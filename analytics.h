@@ -66,5 +66,9 @@
 #include "bot/Position.h"
 #include "bot/Trade.h"
 #include "bot/Bot.h"
+#include <fstream>
+#include <iomanip>
+void exportData(time_t start, time_t end,std::unordered_map<time_t,std::vector<Trade *>> trades, std::string name="Bot");
 
-void displayStats(time_t start, time_t end, AbstractBot* bot);
+void displayStats(time_t start, time_t end,
+    std::vector<double> portfolioVector, std::string title="Portfolio");
