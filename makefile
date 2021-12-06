@@ -6,13 +6,13 @@ CC = g++
 # Compilation flags: -g for debugging. Change to -O or -O2 for optimized code.
 CFLAGS = -o -Wall -std=c++17
 # Linked libraries
-LIB = -lcurl 
+LIB = -lcurl -lboost_iostreams -lboost_system -lboost_filesystem
 # Link flags
 LDFLAGS = -L.
 # Target executable (output)
 PROG = main.out
 # .c or .cpp source files.
-SRC = *.cpp $(wildcard **/*.cpp)
+SRC =   *.cpp  $(wildcard **/*.cpp)
 # Object files for the target. Add more to this and next lines if there are more than one source files.
 OBJ = $(SRC:.cpp=.o)
 VER=c++11

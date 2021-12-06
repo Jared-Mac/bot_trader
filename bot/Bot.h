@@ -34,10 +34,12 @@ class AbstractBot {
         AbstractBot();
         AbstractBot(double startingBalance, int daysToDeposit, double depositAmount);
         ~AbstractBot();
-        
+        std::unordered_map<time_t,std::vector<Trade *>>  getTrades();
+
         void checkForDeposit();
 
         std::map<double,Position *>* rankStocks(time_t currentDay);
+
 
         void notify(time_t currentDay,std::vector<StockSnapshot> snapshots);
 
