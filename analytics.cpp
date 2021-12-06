@@ -23,7 +23,7 @@ void exportData(time_t start, time_t end,std::unordered_map<time_t,std::vector<T
             if(tradePtr->type == SELL){
                 outfile << std::setw(15) << "SELL\n";
             }else{
-            outfile << std::setw(15) << "SELL\n";
+            outfile << std::setw(15) << "BUY\n";
             }
         }
 
@@ -41,9 +41,9 @@ void displayStats(time_t start, time_t end,
     std::vector<std::string> timeData;
     std::vector<double> values;
     std::vector<double> values2;
-    std::vector<std::pair<std::string,double>> data;
+    
     //Generate X-axis for time
-    TemporalIterator iter(start,end,DAILY);
+    TemporalIterator iter(start,previousDay(end),DAILY);
     while(iter.hasNext())
     {
         timeData.push_back(timeToString(iter.next()));
@@ -77,12 +77,14 @@ void displayStats(time_t start, time_t end,
 //         portfolioValue.push_back(sum);
 //     }
 //
-
+    // std::vector<std::pair<std::string,double>> data;
+    std::vector<boost::tuple<std::string,double,double>> data;
     for(int i =0; i < timeData.size(); i++)
     {
         std::string time = timeData[i];
         double y = portfolioVector[i];
-        data.push_back(std::make_pair(time,y));
+        double x =  portfolioVector[i] -1;
+        data.push_back(boost::make_tuple(time,y,x));
     }
 
     Gnuplot gp;
@@ -93,6 +95,10 @@ void displayStats(time_t start, time_t end,
     gp << "set timefmt '%Y-%m-%d'\n";
     gp << "set output '" << title << "_" + timeToString(start)<< "to" <<timeToString(end) <<".png'\n";// 'my_graph_1.png'\n";
     gp << "plot '-'  using 1:2 with lines title ' " << title <<"'\n";
+
+
+
+
     gp.send1d(data);
 
 

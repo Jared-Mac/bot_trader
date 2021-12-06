@@ -16,11 +16,12 @@ AbstractBot::~AbstractBot(){
         delete pair.second;
     }
 }
-AbstractBot::AbstractBot(std::string name,double startingBalance, int daysToDeposit, double depositAmount)
+AbstractBot::AbstractBot(std::string name,double startingBalance, int depositPeriod, double depositAmount)
  {
      this->accountBalance = startingBalance;
-     this->daysToDeposit = daysToDeposit;
+     this->daysToDeposit = depositPeriod;
      this->depositAmount = depositAmount;
+     this->depositPeriod = depositPeriod;
      this->name = name;
  }
 void AbstractBot::deposit(double depositAmount)
@@ -129,7 +130,7 @@ ConservativeBot::ConservativeBot(){
 
 }
 
-ConservativeBot::ConservativeBot(std::string name,double startingBalance, int daysToDeposit, double depositAmount): AbstractBot(name,startingBalance, daysToDeposit, depositAmount)
+ConservativeBot::ConservativeBot(std::string name,double startingBalance, int depositPeriod, double depositAmount): AbstractBot(name,startingBalance, depositPeriod, depositAmount)
 {}
 ConservativeBot::~ConservativeBot(){
 
@@ -157,10 +158,10 @@ AggressiveBot::AggressiveBot(){
 AggressiveBot::~AggressiveBot(){
 
 }
-AggressiveBot::AggressiveBot(std::string name, double startingBalance, int daysToDeposit, double depositAmount): AbstractBot(name,startingBalance, daysToDeposit, depositAmount)
+AggressiveBot::AggressiveBot(std::string name, double startingBalance, int depositPeriod, double depositAmount): AbstractBot(name,startingBalance, depositPeriod, depositAmount)
 {}
 PassiveBot::PassiveBot(){}
-PassiveBot::PassiveBot(std::string name,double startingBalance, int daysToDeposit, double depositAmount) : AbstractBot(name,startingBalance, daysToDeposit, depositAmount)
+PassiveBot::PassiveBot(std::string name,double startingBalance, int depositPeriod, double depositAmount) : AbstractBot(name,startingBalance, depositPeriod, depositAmount)
 {}
 PassiveBot::~PassiveBot(){}
 
@@ -231,6 +232,7 @@ void Bot::setBotType(BotType type,double startingBalance, int daysToDeposit, dou
             break;
         case PASSIVE:
             bot_ = (AbstractBot *) new PassiveBot("Passive Bot",startingBalance, daysToDeposit, depositAmount);
+            break;
         default:
             bot_ = (AbstractBot *) new ConservativeBot("Conservative Bot",startingBalance, daysToDeposit, depositAmount);
 
