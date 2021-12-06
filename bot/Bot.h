@@ -29,10 +29,13 @@ class AbstractBot {
         void deposit(double depositAmount);
         Trade * buyStock(std::string stockSymbol,double spendingMoney);
         Trade * sellStock(std::string stockSymbol, float shares);
+
+        std::string name;
+
     public:
-		std::string name;
+		
         AbstractBot();
-        AbstractBot(double startingBalance, int daysToDeposit, double depositAmount);
+        AbstractBot(std::string name,double startingBalance, int daysToDeposit, double depositAmount);
         ~AbstractBot();
         std::unordered_map<time_t,std::vector<Trade *>>  getTrades();
 
@@ -41,6 +44,7 @@ class AbstractBot {
         std::map<double,Position *>* rankStocks(time_t currentDay);
         double getPortfolioValue();
 
+        std::string getName();
         void notify(time_t currentDay,std::vector<StockSnapshot> snapshots);
 
         friend std::ostream& operator<<(std::ostream& out, const AbstractBot& AbstractBot);
@@ -53,8 +57,9 @@ class ConservativeBot: public AbstractBot
 {
     public:
         ConservativeBot();
-        ConservativeBot(double startingBalance, int daysToDeposit, double depositAmount);
+        ConservativeBot(std::string name,double startingBalance, int daysToDeposit, double depositAmount);
         ~ConservativeBot();
+
     private:
         void trade(time_t currentDay);
 };
@@ -63,7 +68,7 @@ class AggressiveBot: public AbstractBot
 {
     public:
         AggressiveBot();
-        AggressiveBot(double startingBalance, int daysToDeposit, double depositAmount);
+        AggressiveBot(std::string name,double startingBalance, int daysToDeposit, double depositAmount);
         ~AggressiveBot();
     private:
         void trade(time_t currentDay);
@@ -72,7 +77,7 @@ class PassiveBot: public AbstractBot
 {
     public:
         PassiveBot();
-        PassiveBot(double startingBalance, int daysToDeposit, double depositAmount);
+        PassiveBot(std::string name,double startingBalance, int daysToDeposit, double depositAmount);
         ~PassiveBot();
     private:
         void trade(time_t currentDay);
