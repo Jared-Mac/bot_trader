@@ -36,7 +36,9 @@ int main() {
 	                                .build();
 
 	simulation->run();
-	displayStats(stringToTime("2021-11-01"),stringToTime("2021-11-30"), (AbstractBot*)bot1);
+
+	displayStats(stringToTime("2021-11-01"),stringToTime("2021-11-30"),bot1->getBot());
+
 	delete simulation;
 	delete bot1;
 	delete bot2;

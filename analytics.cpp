@@ -2,6 +2,7 @@
 void displayStats(time_t start, time_t end, AbstractBot* bot){
 
     std::unordered_map<time_t,std::vector<Trade *>> trades = bot->getTrades();
+
     std::vector<double> portfolioValue;
 
 

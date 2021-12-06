@@ -90,6 +90,10 @@ class Bot
         void setBotType(BotType type, double startingBalance, int daysToDeposit, double depositAmount);
         void notify(time_t currentDay,std::vector<StockSnapshot> snapshots);
         void trade(time_t currentDay);
+        AbstractBot * getBot()
+        {
+            return this->bot_;
+        }
     private:
         AbstractBot * bot_;
 };
