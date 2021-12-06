@@ -5,7 +5,8 @@ void exportData(time_t start, time_t end,std::unordered_map<time_t,std::vector<T
     std::string filename = name + "_" + timeToString(start) + "to" + timeToString(end) +".txt";
     outfile.open(filename);
     outfile << std::showpoint<< std::setprecision(2) ;
-    outfile << std::setw(10) << "Day"<< std::setw(10) << "Stock" << std::setw(10) << "Amount" << std::setw(10) << "Value\n";
+    outfile << std::setw(10) << "Day"<< std::setw(10) << "Stock" << std::setw(10) << "Amount" << std::setw(10) << "Value";
+    outfile << std::setw(15) << "Buy/Sell\n";
     //std::unordered_map<std::string,Position *> positions = bot->getPositions();
     for(auto pair : trades){
         outfile << std::setw(10) << timeToString(pair.first) <<std::endl; // output day
@@ -18,7 +19,12 @@ void exportData(time_t start, time_t end,std::unordered_map<time_t,std::vector<T
             outfile << std::setw(10) <<" ";
             value += tradePtr->shares * tradePtr->sharePrice;
             outfile << std::setw(10) << tradePtr->stockSymbol << std::setw(10) << tradePtr->shares;
-            outfile << std::setw(10) << tradePtr->sharePrice << std::endl;
+            outfile << std::setw(10) << tradePtr->sharePrice;
+            if(tradePtr->type == SELL){
+                outfile << std::setw(15) << "SELL\n";
+            }else{
+            outfile << std::setw(15) << "SELL\n";
+            }
         }
 
     }
@@ -85,7 +91,7 @@ void displayStats(time_t start, time_t end,
     gp << "set timefmt '%Y-%m-%d'\n";
     gp << "set xrange ['" << sStart <<"':'" << sEnd<< "']\n";
     gp << "set timefmt '%Y-%m-%d'\n";
-    gp << "set output '" << title <<".png'\n";// 'my_graph_1.png'\n";
+    gp << "set output '" << title << "_" + timeToString(start)<< "to" <<timeToString(end) <<".png'\n";// 'my_graph_1.png'\n";
     gp << "plot '-'  using 1:2 with lines title ' " << title <<"'\n";
     gp.send1d(data);
 
