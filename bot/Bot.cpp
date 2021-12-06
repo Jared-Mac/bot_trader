@@ -16,12 +16,13 @@ AbstractBot::~AbstractBot(){
         delete pair.second;
     }
 }
-AbstractBot::AbstractBot(double startingBalance, int daysToDeposit, double depositAmount)
-{
-    this->accountBalance = startingBalance;
-    this->daysToDeposit = daysToDeposit;
-    this->depositAmount = depositAmount;
-}
+AbstractBot::AbstractBot(std::string name,double startingBalance, int daysToDeposit, double depositAmount)
+ {
+     this->accountBalance = startingBalance;
+     this->daysToDeposit = daysToDeposit;
+     this->depositAmount = depositAmount;
+     this->name = name;
+ }
 void AbstractBot::deposit(double depositAmount)
 {
     this->accountBalance += this->depositAmount;
@@ -49,7 +50,10 @@ Trade * AbstractBot::buyStock(std::string stockSymbol, double spendingMoney)
     return new Trade(BUY, shares, price, stockSymbol);
 
 }
-
+std::string AbstractBot::getName()
+ {
+     return this->name;
+ }
 
 Trade * AbstractBot::sellStock(std::string stockSymbol, float shares)
 {
@@ -119,7 +123,7 @@ ConservativeBot::ConservativeBot(){
 
 }
 
-ConservativeBot::ConservativeBot(double startingBalance, int daysToDeposit, double depositAmount): AbstractBot(startingBalance, daysToDeposit, depositAmount)
+ConservativeBot::ConservativeBot(std::string name,double startingBalance, int daysToDeposit, double depositAmount): AbstractBot(name,startingBalance, daysToDeposit, depositAmount)
 {}
 ConservativeBot::~ConservativeBot(){
 
@@ -147,11 +151,10 @@ AggressiveBot::AggressiveBot(){
 AggressiveBot::~AggressiveBot(){
 
 }
-AggressiveBot::AggressiveBot(double startingBalance, int daysToDeposit, double depositAmount): AbstractBot(startingBalance, daysToDeposit, depositAmount)
+AggressiveBot::AggressiveBot(std::string name, double startingBalance, int daysToDeposit, double depositAmount): AbstractBot(name,startingBalance, daysToDeposit, depositAmount)
 {}
-
 PassiveBot::PassiveBot(){}
-PassiveBot::PassiveBot(double startingBalance, int daysToDeposit, double depositAmount) : AbstractBot(startingBalance, daysToDeposit, depositAmount)
+PassiveBot::PassiveBot(std::string name,double startingBalance, int daysToDeposit, double depositAmount) : AbstractBot(name,startingBalance, daysToDeposit, depositAmount)
 {}
 PassiveBot::~PassiveBot(){}
 
@@ -214,15 +217,16 @@ void Bot::setBotType(BotType type,double startingBalance, int daysToDeposit, dou
     switch(type)
     {
         case CONSERVATIVE:
-            bot_ = (AbstractBot *) new ConservativeBot(startingBalance, daysToDeposit, depositAmount);
+            bot_ = (AbstractBot *) new ConservativeBot("Conservative Bot",startingBalance, daysToDeposit, depositAmount);
             break;
         case AGGRESSIVE:
-            bot_ = (AbstractBot *) new AggressiveBot(startingBalance, daysToDeposit, depositAmount);
+            bot_ = (AbstractBot *) new AggressiveBot("Aggressive Bot",startingBalance, daysToDeposit, depositAmount);
             break;
         case PASSIVE:
-            bot_ = (AbstractBot *) new PassiveBot(startingBalance, daysToDeposit, depositAmount);
+            bot_ = (AbstractBot *) new PassiveBot("Passive Bot",startingBalance, daysToDeposit, depositAmount);
         default:
-            bot_ = (AbstractBot *) new ConservativeBot(startingBalance, daysToDeposit, depositAmount);
+            bot_ = (AbstractBot *) new ConservativeBot("Conservative Bot",startingBalance, daysToDeposit, depositAmount);
+
     }
 
 }
@@ -241,17 +245,49 @@ std::unordered_map<time_t,std::vector<Trade *>>  AbstractBot::getTrades()
 {
     return trades;
 }
-std::ostream& operator<<(std::ostream& out, const AbstractBot& AbstractBot) {
-    cout << "Bot'account balance : " << AbstractBot.accountBalance << endl;
-    cout << "Bot's positions" << endl;
+std::unordered_map<std::string,Position *> AbstractBot::getPositions(){
+    return positions;
+}
+std::ostream& operator<<(std::ostream& out, const AbstractBot& bot) {
+    cout << bot.name << "\'s account balance : " << bot.accountBalance << endl;
+     cout << bot.name << "\'s positions" << endl;
     double value = 0;
-    for(auto pair : AbstractBot.positions)
+    for(auto pair : bot.positions)
     {
         cout << pair.first << '\t' << *(pair.second) << endl;
         value += pair.second->getShares() * pair.second->getCurrentPrice();
     }
     cout << "Portfolio Value: " << value << endl;
-    cout << "Total Value: " << value + AbstractBot.accountBalance << endl;
+    cout << "Total Value: " << value + bot.accountBalance << endl;
 
 	return out;
 }
+std::vector <double> Bot::portfolioReport(){
+    std::vector<double> portfolioValue;
+    for( const auto& n: bot_->trades){//iterate thru trade vectors
+        double sum = 0;
+
+        //const std::vector<Trade> t = n.second;
+        for(int i = 0;i < n.second.size();i++ ){//each trade
+            //Trade *temp =  n.second[i];
+            if(n.second[i]->type == BUY){
+                sum += n.second[i]->shares * n.second[i]->sharePrice;
+            }
+            else if(n.second[i]->type == BUY){
+                sum -= n.second[i]->shares * n.second[i]->sharePrice;
+            }
+        }
+        std::cout <<"pushing " << sum << " for" << timeToString(n.first) << std::endl;
+        portfolioValue.push_back(sum);
+    }
+    return portfolioValue;
+}
+double AbstractBot::getPortfolioValue()
+ {
+     double value = this->accountBalance;
+     for(auto pair : this->positions)
+     {
+         value += pair.second->getShares() * pair.second->getCurrentPrice();
+     }
+     return value;
+ }

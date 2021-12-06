@@ -1,8 +1,33 @@
 #include "analytics.h"
-void displayStats(time_t start, time_t end, AbstractBot* bot){
 
-    std::unordered_map<time_t,std::vector<Trade *>> trades = bot->getTrades();
-    std::vector<double> portfolioValue;
+void exportData(time_t start, time_t end,std::unordered_map<time_t,std::vector<Trade *>> trades,std::string name){
+    std::ofstream outfile;
+    std::string filename = name + "_" + timeToString(start) + "to" + timeToString(end) +".txt";
+    outfile.open(filename);
+    outfile << std::showpoint<< std::setprecision(2) ;
+    outfile << std::setw(10) << "Day"<< std::setw(10) << "Stock" << std::setw(10) << "Amount" << std::setw(10) << "Value\n";
+    //std::unordered_map<std::string,Position *> positions = bot->getPositions();
+    for(auto pair : trades){
+        outfile << std::setw(10) << timeToString(pair.first) <<std::endl; // output day
+        // if(pair.second == NULL){
+        //     outfile <<"NO TRADES FOR THE DAY!" << std::endl;
+        // }
+        for(auto tradePtr: pair.second){//V is a trade
+            double value = 0;
+            //std::cout << pair.first << '\t' << *(pair.second) << std::endl;
+            outfile << std::setw(10) <<" ";
+            value += tradePtr->shares * tradePtr->sharePrice;
+            outfile << std::setw(10) << tradePtr->stockSymbol << std::setw(10) << tradePtr->shares;
+            outfile << std::setw(10) << tradePtr->sharePrice << std::endl;
+        }
+
+    }
+    outfile.close();
+}
+
+void displayStats(time_t start, time_t end,
+    std::vector<double> portfolioVector,std::string title){
+    //std::vector<double> portfolioValue = bot->portfolioReport();
 
 
     std::string sStart=timeToString(start),
@@ -28,32 +53,40 @@ void displayStats(time_t start, time_t end, AbstractBot* bot){
     // {
     //     values2.push_back(2*i * 100);
     // }
-    for( const auto& n: trades){//iterate thru trade vectors
-        double sum = 0;
-        //const std::vector<Trade> t = n.second;
-        for(int i = 0;i < n.second.size();i++ ){//each trade
-            Trade *temp =  n.second[i];
-            if(temp->type == BUY){
-                sum += temp->shares * temp->sharePrice;
-            }
-        }
-        portfolioValue.push_back(sum);
-    }
-
+//     for( const auto& n: bot->bot_->trades){//iterate thru trade vectors
+// double sum = 0;
+//         try{
+//
+//         //const std::vector<Trade> t = n.second;
+//         for(int i = 0;i < n.second.size();i++ ){//each trade
+//             //Trade *temp =  n.second[i];
+//             if(n.second[i]->type == BUY){
+//                 sum += n.second[i]->shares * n.second[i]->sharePrice;
+//             }
+//         }
+//     }catch(std::bad_alloc){
+//         std::cout <<"Hello" << std::endl;
+//
+//     }
+//         portfolioValue.push_back(sum);
+//     }
+//
 
     for(int i =0; i < timeData.size(); i++)
     {
         std::string time = timeData[i];
-        double y = portfolioValue[i];
+        double y = portfolioVector[i];
         data.push_back(std::make_pair(time,y));
     }
 
     Gnuplot gp;
+    gp << "set terminal png\n";
     gp << "set xdata time\n";
     gp << "set timefmt '%Y-%m-%d'\n";
     gp << "set xrange ['" << sStart <<"':'" << sEnd<< "']\n";
     gp << "set timefmt '%Y-%m-%d'\n";
-    gp << "plot '-'  using 1:2 with points title 'test'\n";
+    gp << "set output '" << title <<".png'\n";// 'my_graph_1.png'\n";
+    gp << "plot '-'  using 1:2 with lines title ' " << title <<"'\n";
     gp.send1d(data);
 
 

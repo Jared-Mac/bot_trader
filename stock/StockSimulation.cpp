@@ -1,5 +1,5 @@
 #include "StockSimulation.h"
-
+#include "../analytics.h"
 StockSimulation::StockSimulation(std::unordered_map<Stock*, std::vector<Bot*>> stock_mapping, std::unordered_map<Bot*, std::vector<Stock*>> bot_mapping, std::time_t start, std::time_t end, Interval interval) {
 	this->stock_mapping = stock_mapping;
 	this->bot_mapping = bot_mapping;
@@ -26,6 +26,7 @@ void StockSimulation::run() {
 	for (auto stock_pair : this->stock_mapping) {
 		YahooFinanceAPI::getInstance()->populateHistoricalStockData(*stock_pair.first, start, end, interval);
 	}
+	std::unordered_map<AbstractBot*, std::vector<double>> botPortfolioMap;
 
 	TemporalIterator itr(start, end, interval);
 
@@ -56,6 +57,16 @@ void StockSimulation::run() {
 			}
 
 			bot_pair.first->notify(current_day, daily_snapshots);
+			double portfolioValue = bot_pair.first->getBot()->getPortfolioValue();
+			std::cout << "Portfolio Value:" << portfolioValue << std::endl;
+			botPortfolioMap[bot_pair.first->getBot()].push_back(portfolioValue);
+
         }
-    }
+    }// END OF WHILE  simulation
+	for (auto bot_pair : botPortfolioMap) {
+		displayStats(start,end,bot_pair.second, bot_pair.first->getName());
+		exportData(start,end,bot_pair.first->trades, bot_pair.first->getName());
+	}
+
+
 }

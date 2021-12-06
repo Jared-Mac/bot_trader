@@ -2,7 +2,7 @@
 
 #include "stock/StockSimulation.h"
 #include "bot/Bot.h"
-#include "analytics.h"
+//#include "analytics.h"
 
 int main() {
 	Bot* bot1 = new Bot();
@@ -36,7 +36,9 @@ int main() {
 	                                .build();
 
 	simulation->run();
-	displayStats(stringToTime("2021-11-01"),stringToTime("2021-11-30"), (AbstractBot*)bot1);
+	//exportData(stringToTime("2021-11-01"),bot1);
+	//displayStats(stringToTime("2021-11-01"),stringToTime("2021-11-30"), bot1);
+
 	delete simulation;
 	delete bot1;
 	delete bot2;
