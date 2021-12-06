@@ -1,7 +1,6 @@
 // #include <vector>
 // #include <cmath>
-// //may remove
-// #include <boost/tuple/tuple.hpp>
+
 //
 // // #include "stock/StockSimulation.h"
 // // #include "bot/Bot.h"
@@ -58,10 +57,7 @@
 
 #include <vector>
 #include <cmath>
-//may remove
-#include <boost/tuple/tuple.hpp>
-#include <boost/tuple/tuple_io.hpp>
-#include <boost/tuple/tuple_comparison.hpp>
+
 
 // #include "stock/StockSimulation.h"
 // #include "bot/Bot.h"

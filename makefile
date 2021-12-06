@@ -12,7 +12,7 @@ LDFLAGS = -L.
 # Target executable (output)
 PROG = main.out
 # .c or .cpp source files.
-SRC =   *.cpp  $(wildcard **/*.cpp)
+SRC =   main.cpp analytics.cpp  $(wildcard **/*.cpp)
 # Object files for the target. Add more to this and next lines if there are more than one source files.
 OBJ = $(SRC:.cpp=.o)
 VER=c++11

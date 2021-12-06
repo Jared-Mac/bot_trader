@@ -30,9 +30,9 @@ void displayStats(time_t start, time_t end, AbstractBot* bot){
     // }
     for( const auto& n: trades){//iterate thru trade vectors
         double sum = 0;
-        std::vector<Trade> t = n.second;
-        for(int i = 0;i < t.size();i++ ){//each trade
-            Trade *temp =  t[i];
+        //const std::vector<Trade> t = n.second;
+        for(int i = 0;i < n.second.size();i++ ){//each trade
+            Trade *temp =  n.second[i];
             if(temp->type == BUY){
                 sum += temp->shares * temp->sharePrice;
             }
@@ -47,9 +47,7 @@ void displayStats(time_t start, time_t end, AbstractBot* bot){
         double y = portfolioValue[i];
         data.push_back(std::make_pair(time,y));
     }
-    boost::tuple<std::vector<std::string>,std::vector<double>> temp;
-    temp = boost::make_tuple(timeData, values);
-    // std::cout << temp <<std::endl;//.get_head()[0] <<"anflsknflksnfklnflkas" <<std::endl;
+
     Gnuplot gp;
     gp << "set xdata time\n";
     gp << "set timefmt '%Y-%m-%d'\n";
@@ -57,8 +55,7 @@ void displayStats(time_t start, time_t end, AbstractBot* bot){
     gp << "set timefmt '%Y-%m-%d'\n";
     gp << "plot '-'  using 1:2 with points title 'test'\n";
     gp.send1d(data);
-    //gp.send1d(temp);
-    //gp.send1d(boost::make_tuple(timeData, values));
+
 
 
 }
