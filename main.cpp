@@ -2,11 +2,12 @@
 
 #include "stock/StockSimulation.h"
 #include "bot/Bot.h"
+#include "analytics.h"
 
 int main() {
 	Bot* bot1 = new Bot();
 	// bot1->name = "Bot 1";
-	//               Bot_type, Starting Balance, Deposit period (in terms of interval), Recurring Deposit amount 
+	//               Bot_type, Starting Balance, Deposit period (in terms of interval), Recurring Deposit amount
 	bot1->setBotType(CONSERVATIVE, 1000, 5, 100);
 	Bot* bot2 = new Bot();
 	bot2->setBotType(AGGRESSIVE, 1000, 5, 100);
@@ -14,6 +15,7 @@ int main() {
 	Bot* bot3 = new Bot();
 	bot3->setBotType(PASSIVE, 1000, 5, 100);
 	// bot3->name = "Bot 3";
+
 
 	StockSimulation* simulation = StockSimulation::builder()
 	                                .withStartDate("2021-01-01")
@@ -35,8 +37,10 @@ int main() {
 
 	simulation->run();
 
+	// displayStats(stringToTime("2021-11-01"),stringToTime("2021-11-30"),bot1->getBot());
+
 	delete simulation;
 	delete bot1;
 	delete bot2;
 	delete bot3;
-} 
+}

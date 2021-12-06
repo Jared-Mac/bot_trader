@@ -4,6 +4,7 @@
 #include <iomanip>
 #include <string>
 #include <ctime>
+#include <sstream>
 
 #include "Interval.h"
 

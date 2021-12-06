@@ -57,6 +57,7 @@ void StockSimulation::run() {
 			}
 
 			bot_pair.first->notify(current_day, daily_snapshots);
+			std::cout << "Portfolio Value:" << bot_pair.first->getBot()->getPortfolioValue() << std::endl;
         }
     }
 }
