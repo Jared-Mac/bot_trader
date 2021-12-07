@@ -96,7 +96,7 @@ class Bot
         Bot(double startingBalance, int daysToDeposit, double depositAmount);
         ~Bot();
         void setBotType(BotType type);
-        void setBotType(BotType type, double startingBalance, int depo, double depositAmount);
+        void setBotType(std::string Name,BotType type, double startingBalance, int depo, double depositAmount);
         void notify(time_t currentDay,std::vector<StockSnapshot> snapshots);
         void trade(time_t currentDay);
         std::vector <double> portfolioReport();

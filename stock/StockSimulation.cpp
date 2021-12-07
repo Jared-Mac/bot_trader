@@ -57,7 +57,6 @@ void StockSimulation::run() {
 			}
 
 			double portfolioValue = bot_pair.first->getBot()->getPortfolioValue();
-			std::cout << "Portfolio Value:" << portfolioValue << std::endl;
 			botPortfolioMap[bot_pair.first->getBot()].push_back(portfolioValue);
 
         }

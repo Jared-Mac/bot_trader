@@ -219,22 +219,22 @@ void Bot::setBotType(BotType type)
     }
 
 }
-void Bot::setBotType(BotType type,double startingBalance, int daysToDeposit, double depositAmount)
+void Bot::setBotType(std::string name,BotType type,double startingBalance, int daysToDeposit, double depositAmount)
 {
     delete bot_;
     switch(type)
     {
         case CONSERVATIVE:
-            bot_ = (AbstractBot *) new ConservativeBot("Conservative Bot",startingBalance, daysToDeposit, depositAmount);
+            bot_ = (AbstractBot *) new ConservativeBot(name,startingBalance, daysToDeposit, depositAmount);
             break;
         case AGGRESSIVE:
-            bot_ = (AbstractBot *) new AggressiveBot("Aggressive Bot",startingBalance, daysToDeposit, depositAmount);
+            bot_ = (AbstractBot *) new AggressiveBot(name,startingBalance, daysToDeposit, depositAmount);
             break;
         case PASSIVE:
-            bot_ = (AbstractBot *) new PassiveBot("Passive Bot",startingBalance, daysToDeposit, depositAmount);
+            bot_ = (AbstractBot *) new PassiveBot(name,startingBalance, daysToDeposit, depositAmount);
             break;
         default:
-            bot_ = (AbstractBot *) new ConservativeBot("Conservative Bot",startingBalance, daysToDeposit, depositAmount);
+            bot_ = (AbstractBot *) new ConservativeBot(name,startingBalance, daysToDeposit, depositAmount);
 
     }
 

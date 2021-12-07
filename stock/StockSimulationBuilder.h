@@ -24,9 +24,10 @@ class StockSimulationBuilder {
 		std::unordered_set<Bot*> bots_subscribed_to_all;
 		std::unordered_map<Bot*, std::unordered_set<std::string>> bots;
 
-		StockSimulationBuilder();
+		
 
 	public:
+		StockSimulationBuilder();
 		StockSimulationBuilder& withStartDate(std::time_t start);
 		StockSimulationBuilder& withStartDate(std::string start);
 		StockSimulationBuilder& withEndDate(std::time_t end);
