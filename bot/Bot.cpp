@@ -18,16 +18,20 @@ AbstractBot::~AbstractBot(){
 }
 AbstractBot::AbstractBot(std::string name,double startingBalance, int depositPeriod, double depositAmount)
  {
-     this->accountBalance = startingBalance;
-     this->daysToDeposit = depositPeriod;
-     this->depositAmount = depositAmount;
-     this->depositPeriod = depositPeriod;
-     this->name = name;
+    this->name = name;
+    this->accountBalance = startingBalance;
+    this->startingBalance = startingBalance;
+    this->daysToDeposit = depositPeriod;
+    this->depositPeriod = depositPeriod;
+
+    this->depositAmount = depositAmount;
+           
  }
 void AbstractBot::deposit(double depositAmount)
 {
     std::cout<< "[DEPOSIT] " << depositAmount << std::endl;
     this->accountBalance += depositAmount;
+    this->cumulativeDeposit += depositAmount;
 }
 void AbstractBot::checkForDeposit(){
     if (this->daysToDeposit == 0)
@@ -125,6 +129,11 @@ std::map<double,Position *>* AbstractBot::rankStocks(time_t currentDay)
     }
     return ranked;
 
+}
+
+double AbstractBot::getProfit()
+{
+    return this->getPortfolioValue() - this->cumulativeDeposit - this->startingBalance;
 }
 ConservativeBot::ConservativeBot(){
 

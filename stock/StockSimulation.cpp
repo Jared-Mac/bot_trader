@@ -62,6 +62,7 @@ void StockSimulation::run() {
         }
     }// END OF WHILE  simulation
 	for (auto bot_pair : botPortfolioMap) {
+		std::cout << bot_pair.first->getName() << "'s Profit: " << bot_pair.first->getProfit() << std::endl;
 		displayStats(start,end,bot_pair.second, bot_pair.first->getName());
 		exportData(start,end,bot_pair.first->trades, bot_pair.first->getName());
 	}
